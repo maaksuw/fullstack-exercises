@@ -6,13 +6,16 @@ const Button = (props) => (
     <button onClick={props.handleClick}>{props.text}</button>
 )
 
-const StatsLine = ({stats}) => {
-  const [good, neutral, bad] = stats
+const Statistics = ({stats}) => {
+  const [good, neutral, bad, all, average, positive] = stats
   return (
     <div>
       <p>Good: {good}</p>
       <p>Neutral: {neutral}</p>
       <p>Bad: {bad}</p>
+      <p>All: {all}</p>
+      <p>Average: {average}</p>
+      <p>Positive: {positive} %</p>
     </div>
   )
 }
@@ -29,7 +32,10 @@ const App = () => {
 
   const increaseBad = () => setBad(bad + 1)
 
-  const stats = [good, neutral, bad]
+  const all = good + neutral + bad
+  const average = (1*good - 1*bad)/all
+  const positive = good/all
+  const stats = [good, neutral, bad, all, average, positive]
 
   return (
     <div>
@@ -38,7 +44,7 @@ const App = () => {
       <Button handleClick={increaseNeutral} text="Neutral" />
       <Button handleClick={increaseBad} text="Bad" />
       <Header text="Statistics" />
-      <StatsLine stats={stats}/>
+      <Statistics stats={stats}/>
     </div>
   )
 }
