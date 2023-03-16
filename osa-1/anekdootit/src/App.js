@@ -4,10 +4,21 @@ function getRandomInt(max) {
   return Math.floor(Math.random() * max);
 }
 
+const Header = ({text}) => (
+  <h1>{text}</h1>
+)
+
 const Button = (props) => (
   <button onClick={props.handleClick}>
     {props.text}
   </button>
+)
+
+const DisplayAnecdote = ({anecdote, votes}) => (
+  <div>
+    <p>{anecdote}</p>
+    <p>Votes: {votes}</p>
+  </div>
 )
 
 const App = () => {
@@ -22,14 +33,15 @@ const App = () => {
     'The only way to go fast, is to go well.'
   ]
   
-  const getAnecdote = () => anecdotes[getRandomInt(anecdotes.length)]
+  const getRandomAnecdote = () => anecdotes[getRandomInt(anecdotes.length)]
   const getAnecdoteId = (target) => anecdotes.findIndex(x => x === target)
 
-  const [selected, setSelected] = useState(getAnecdote())
+  const [selected, setSelected] = useState(getRandomAnecdote())
   const [votes, setVotes] = useState(new Uint8Array(8))
+  const [best, setBest] = useState(getRandomAnecdote)
 
   const selectAnecdote = () => (
-    setSelected(getAnecdote())
+    setSelected(getRandomAnecdote())
   )
 
   const addVote = () => {
@@ -37,14 +49,20 @@ const App = () => {
     const updatedVotes = [ ...votes]
     updatedVotes[id] += 1
     setVotes(updatedVotes)
+
+    const maxVotes = Math.max(...updatedVotes)
+    const bestId = updatedVotes.findIndex(x => x === maxVotes)
+    setBest(anecdotes[bestId])
   }
 
   return (
     <div>
-      <p>{selected}</p>
-      <p>Votes: {votes[getAnecdoteId(selected)]}</p>
+      <Header text="Random anecdote" />
+      <DisplayAnecdote anecdote={selected} votes={votes[getAnecdoteId(selected)]}/>
       <Button handleClick={selectAnecdote} text="Show a new anecdote" />
       <Button handleClick={addVote} text="Vote" />
+      <Header text="Most popular anecdote" />
+      <DisplayAnecdote anecdote={best} votes={votes[getAnecdoteId(best)]}/>
     </div>
   )
 }
