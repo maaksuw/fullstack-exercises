@@ -6,30 +6,6 @@ const Button = (props) => (
     <button onClick={props.handleClick}>{props.text}</button>
 )
 
-const StatisticsLine = ({text, value, mark}) => {
-  if (mark === true) {
-    return <p>{text}: {value} %</p>
-  }
-  return <p>{text}: {value}</p>
-}
-
-const Statistics = ({stats}) => {
-  const [good, neutral, bad, all, average, positive] = stats
-  if (all === 0) {
-    return <p>No feedback yet!</p>
-  }
-  return (
-    <div>
-      <StatisticsLine text="Good" value={good} mark={false}/>
-      <StatisticsLine text="Neutral" value={neutral} mark={false}/>
-      <StatisticsLine text="Bad" value={bad} mark={false}/>
-      <StatisticsLine text="All" value={all} mark={false}/>
-      <StatisticsLine text="Average" value={average} mark={false}/>
-      <StatisticsLine text="Positive" value={positive} mark={true}/>
-    </div>
-  )
-}
-
 const StatisticsTableLine = ({text, value}) => {
   if (text === "Positive") {
     return (
