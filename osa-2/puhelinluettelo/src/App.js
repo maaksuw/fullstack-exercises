@@ -26,12 +26,18 @@ const Persons = ({persons}) => {
   )
 }
 
+const Filter = ({variable, func}) => <input value={variable} onChange={func} />
+
 const App = () => {
   const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', number: '123 456 789' }
+    { name: 'Arto Hellas', number: '040-123456' },
+    { name: 'Ada Lovelace', number: '39-44-5323523' },
+    { name: 'Dan Abramov', number: '12-43-234345' },
+    { name: 'Mary Poppendieck', number: '39-23-6423122' }
   ]) 
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
+  const [filter, setFilter] = useState('')
 
   const addName = (event) => {
     event.preventDefault()
@@ -53,18 +59,26 @@ const App = () => {
     setNewNumber(event.target.value)
   }
 
-const form = {
-  functions: [addName, handleNameChange, handleNumberChange],
-  variables: [newName, newNumber]
-}
+  const handleFilterChange = (event) => {
+    setFilter(event.target.value)
+  }
+
+  const form = {
+    functions: [addName, handleNameChange, handleNumberChange],
+    variables: [newName, newNumber]
+  }
+
+  const numbersToShow = (filter === '') ? persons : persons.filter( person => person.name.toLowerCase().includes(filter) || person.number.toLowerCase().includes(filter))
 
   return (
     <div>
       <h2>Phonebook</h2>
       <h3>Add a new number</h3>
       <Form form={form}/>
+      <h3>Filter</h3>
+      <Filter variable={filter} func={handleFilterChange}/>
       <h3>Numbers</h3>
-      <Persons persons={persons}/>
+      <Persons persons={numbersToShow}/>
     </div>
   )
 }
