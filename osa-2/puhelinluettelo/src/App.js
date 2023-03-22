@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 
-const baseUrl = 'http://localhost:3001/persons'
+import numberService from './services/persons'
 
 const Form = ({form}) => {
   const [addName, handleNameChange, handleNumberChange] = form.functions
@@ -38,10 +38,10 @@ const App = () => {
   const [filter, setFilter] = useState('')
 
   useEffect(() => {
-    axios
-      .get(baseUrl)
+    numberService
+      .getAll()
       .then(response => {
-        setPersons(response.data)
+        setPersons(response)
       })
   }, [])
 
@@ -49,12 +49,11 @@ const App = () => {
     event.preventDefault()
     if (!persons.some( person => person.name === newName)) {
       const newPerson = { name: newName, number: newNumber }
-      axios
-        .post(baseUrl, newPerson)
+      numberService
+        .create(newPerson)
         .then(response => {
-          setPersons(persons.concat(newPerson))
+          setPersons(persons.concat(response))
         })
-
     } else {
       alert(`${newName} is already in the phonebook.`)
     }
