@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 
+const baseUrl = 'http://localhost:3001/persons'
+
 const Form = ({form}) => {
   const [addName, handleNameChange, handleNumberChange] = form.functions
   const [newName, newNumber] = form.variables
@@ -37,7 +39,7 @@ const App = () => {
 
   useEffect(() => {
     axios
-      .get('http://localhost:3001/persons')
+      .get(baseUrl)
       .then(response => {
         setPersons(response.data)
       })
@@ -47,7 +49,12 @@ const App = () => {
     event.preventDefault()
     if (!persons.some( person => person.name === newName)) {
       const newPerson = { name: newName, number: newNumber }
-      setPersons(persons.concat(newPerson))
+      axios
+        .post(baseUrl, newPerson)
+        .then(response => {
+          setPersons(persons.concat(newPerson))
+        })
+
     } else {
       alert(`${newName} is already in the phonebook.`)
     }
