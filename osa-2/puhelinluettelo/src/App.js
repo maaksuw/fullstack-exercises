@@ -16,10 +16,10 @@ const Form = ({form}) => {
   )
 }
 
-const Person = ({person, remove}) => {
+const Person = ({person, removePerson}) => {
   return (
     <>
-      <li>{person.name} {person.number} <button onClick={remove}>Remove</button></li>
+      <li>{person.name} {person.number} <button onClick={removePerson}>Remove</button></li>
     </>
   )
 }
@@ -33,7 +33,6 @@ const Persons = ({persons, setPersons}) => {
       numberService
         .remove(id)
         .then(() => {
-          console.log('Removed ' + id)
           setPersons(persons.filter(person => person.id !== id))
         })
     }
@@ -42,7 +41,7 @@ const Persons = ({persons, setPersons}) => {
   return (
     <ul>
       {persons.map(person => 
-        <Person key={person.name} person={person} remove={() => remove(person)}/>
+        <Person key={person.name} person={person} removePerson={() => remove(person)}/>
       )}
     </ul>
   )
@@ -66,7 +65,7 @@ const App = () => {
 
   const addName = (event) => {
     event.preventDefault()
-    if (!persons.some( person => person.name === newName)) {
+    if (!persons.some( person => person.name === newName )) {
       const newPerson = { name: newName, number: newNumber }
       numberService
         .create(newPerson)
@@ -74,7 +73,15 @@ const App = () => {
           setPersons(persons.concat(response))
         })
     } else {
-      alert(`${newName} is already in the phonebook.`)
+      if (window.confirm(`${newName} is already in the phonebook. Replace the old number?`)) {
+        const id = persons.find( person => person.name === newName ).id
+        const newPerson = { name: newName, number: newNumber }
+        numberService
+          .update(id, newPerson)
+          .then(response => {
+            setPersons(persons.filter( person => person.name !== newName ).concat(response))
+          })
+      }
     }
     setNewName('')
     setNewNumber('')
