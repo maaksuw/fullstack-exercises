@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
 
 import numberService from './services/persons'
 
@@ -17,13 +16,33 @@ const Form = ({form}) => {
   )
 }
 
-const Person = ({name, number}) => <li>{name} {number}</li>
+const Person = ({person, remove}) => {
+  return (
+    <>
+      <li>{person.name} {person.number} <button onClick={remove}>Remove</button></li>
+    </>
+  )
+}
 
-const Persons = ({persons}) => {
+const Persons = ({persons, setPersons}) => {
+
+  const remove = (person) => {
+    const name = person.name
+    const id = person.id
+    if (window.confirm(`Remove ${name} from phonebook?`)) {
+      numberService
+        .remove(id)
+        .then(() => {
+          console.log('Removed ' + id)
+          setPersons(persons.filter(person => person.id !== id))
+        })
+    }
+  }
+
   return (
     <ul>
       {persons.map(person => 
-        <Person key={person.name} name={person.name} number={person.number} />
+        <Person key={person.name} person={person} remove={() => remove(person)}/>
       )}
     </ul>
   )
@@ -88,7 +107,7 @@ const App = () => {
       <h3>Filter</h3>
       <Filter variable={filter} func={handleFilterChange}/>
       <h3>Numbers</h3>
-      <Persons persons={numbersToShow}/>
+      <Persons persons={numbersToShow} setPersons={setPersons}/>
     </div>
   )
 }
