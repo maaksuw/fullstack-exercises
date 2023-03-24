@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 
 import numberService from './services/persons'
+import './index.css'
 
 const Form = ({form}) => {
   const [addName, handleNameChange, handleNumberChange] = form.functions
@@ -16,32 +17,19 @@ const Form = ({form}) => {
   )
 }
 
-const Person = ({person, removePerson}) => {
+const Person = ({person, remove}) => {
   return (
     <>
-      <li>{person.name} {person.number} <button onClick={removePerson}>Remove</button></li>
+      <li>{person.name} {person.number} <button onClick={remove}>Remove</button></li>
     </>
   )
 }
 
-const Persons = ({persons, setPersons}) => {
-
-  const remove = (person) => {
-    const name = person.name
-    const id = person.id
-    if (window.confirm(`Remove ${name} from phonebook?`)) {
-      numberService
-        .remove(id)
-        .then(() => {
-          setPersons(persons.filter(person => person.id !== id))
-        })
-    }
-  }
-
+const Persons = ({persons, remove}) => {
   return (
     <ul>
       {persons.map(person => 
-        <Person key={person.name} person={person} removePerson={() => remove(person)}/>
+        <Person key={person.name} person={person} remove={function(){ remove(person) }}/>
       )}
     </ul>
   )
@@ -49,11 +37,24 @@ const Persons = ({persons, setPersons}) => {
 
 const Filter = ({variable, func}) => <input value={variable} onChange={func} />
 
+const Notification = ({ message }) => {
+  if (message === null) {
+    return null
+  }
+
+  return (
+    <div className="error">
+      {message}
+    </div>
+  )
+}
+
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
+  const [errorMessage, setErrorMessage] = useState(null)
 
   useEffect(() => {
     numberService
@@ -63,6 +64,13 @@ const App = () => {
       })
   }, [])
 
+  const notifySuccess = (message) => {
+    setErrorMessage(message)
+    setTimeout(() => {
+      setErrorMessage(null)
+    }, 5000)
+  }
+
   const addName = (event) => {
     event.preventDefault()
     if (!persons.some( person => person.name === newName )) {
@@ -71,6 +79,7 @@ const App = () => {
         .create(newPerson)
         .then(response => {
           setPersons(persons.concat(response))
+          notifySuccess(`${response.name} succesfully added to the phonebook.`)
         })
     } else {
       if (window.confirm(`${newName} is already in the phonebook. Replace the old number?`)) {
@@ -80,11 +89,25 @@ const App = () => {
           .update(id, newPerson)
           .then(response => {
             setPersons(persons.filter( person => person.name !== newName ).concat(response))
+            notifySuccess(`New number successfully updated for ${response.name}.`)
           })
       }
     }
     setNewName('')
     setNewNumber('')
+  }
+
+  const remove = (person) => {
+    const name = person.name
+    const id = person.id
+    if (window.confirm(`Remove ${name} from phonebook?`)) {
+      numberService
+        .remove(id)
+        .then(() => {
+          setPersons(persons.filter(person => person.id !== id))
+          notifySuccess(`${name} successfully removed from the phonebook.`)
+        })
+    }
   }
 
   const handleNameChange = (event) => {
@@ -108,13 +131,14 @@ const App = () => {
 
   return (
     <div>
-      <h2>Phonebook</h2>
+      <h1>Phonebook</h1>
+      <Notification message={errorMessage} />
       <h3>Add a new number</h3>
       <Form form={form}/>
       <h3>Filter</h3>
       <Filter variable={filter} func={handleFilterChange}/>
       <h3>Numbers</h3>
-      <Persons persons={numbersToShow} setPersons={setPersons}/>
+      <Persons persons={numbersToShow} remove={remove}/>
     </div>
   )
 }
