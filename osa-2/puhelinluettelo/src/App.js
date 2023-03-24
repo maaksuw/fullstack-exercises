@@ -37,13 +37,13 @@ const Persons = ({persons, remove}) => {
 
 const Filter = ({variable, func}) => <input value={variable} onChange={func} />
 
-const Notification = ({ message }) => {
+const Notification = ({ message, type }) => {
   if (message === null) {
     return null
   }
 
   return (
-    <div className="error">
+    <div className={type}>
       {message}
     </div>
   )
@@ -54,6 +54,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
+  const [successMessage, setSuccessMessage] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
 
   useEffect(() => {
@@ -65,6 +66,13 @@ const App = () => {
   }, [])
 
   const notifySuccess = (message) => {
+    setSuccessMessage(message)
+    setTimeout(() => {
+      setSuccessMessage(null)
+    }, 5000)
+  }
+
+  const notifyError = (message) => {
     setErrorMessage(message)
     setTimeout(() => {
       setErrorMessage(null)
@@ -90,6 +98,10 @@ const App = () => {
           .then(response => {
             setPersons(persons.filter( person => person.name !== newName ).concat(response))
             notifySuccess(`New number successfully updated for ${response.name}.`)
+          })
+          .catch(error => {
+            setPersons(persons.filter( person => person.name !== newName ))
+            notifyError(`Failed to update number for ${newName}. It has already been removed.`)
           })
       }
     }
@@ -132,7 +144,8 @@ const App = () => {
   return (
     <div>
       <h1>Phonebook</h1>
-      <Notification message={errorMessage} />
+      <Notification message={successMessage} type='success'/>
+      <Notification message={errorMessage} type='error'/>
       <h3>Add a new number</h3>
       <Form form={form}/>
       <h3>Filter</h3>
