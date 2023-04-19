@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest --verbose"
   },
   "author": "Minä",
   "license": "MIT",
@@ -16,6 +16,10 @@
     "mongoose": "^7.0.4"
   },
   "devDependencies": {
+    "jest": "^29.5.0",
     "nodemon": "^2.0.22"
+  },
+  "jest": {
+    "testEnvironment": "node"
   }
 }
