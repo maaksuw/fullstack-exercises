@@ -2,8 +2,8 @@ POST http://localhost:3003/api/blogs HTTP/1.1
 content-type: application/json
 
 {
-    "title": "Amazing Book",
-    "author": "The Best Writer in the World",
+    "title": "The Best Book 4",
+    "author": "A Godly Writer",
     "url": "example.fi",
-    "likes": 3
+    "likes": 90
 }
