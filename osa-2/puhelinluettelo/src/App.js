@@ -1,53 +1,11 @@
 import { useState, useEffect } from 'react'
 
 import numberService from './services/persons'
+import Form from './components/Form'
+import Notification from './components/Notification'
+import Persons from './components/Persons'
+import Filter from './components/Filter'
 import './index.css'
-
-const Form = ({form}) => {
-  const [addName, handleNameChange, handleNumberChange] = form.functions
-  const [newName, newNumber] = form.variables
-  return (
-    <form onSubmit={addName}>
-      <div> Name: <input value={newName} onChange={handleNameChange}/> </div>
-      <div> Number: <input value={newNumber} onChange={handleNumberChange}/> </div>
-      <div>
-        <button type="submit">add</button>
-      </div>
-    </form>
-  )
-}
-
-const Person = ({person, remove}) => {
-  return (
-    <>
-      <li>{person.name} {person.number} <button onClick={remove}>Remove</button></li>
-    </>
-  )
-}
-
-const Persons = ({persons, remove}) => {
-  return (
-    <ul>
-      {persons.map(person => 
-        <Person key={person.name} person={person} remove={function(){ remove(person) }}/>
-      )}
-    </ul>
-  )
-}
-
-const Filter = ({variable, func}) => <input value={variable} onChange={func} />
-
-const Notification = ({ message, type }) => {
-  if (message === null) {
-    return null
-  }
-
-  return (
-    <div className={type}>
-      {message}
-    </div>
-  )
-}
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -79,30 +37,48 @@ const App = () => {
     }, 5000)
   }
 
-  const addName = (event) => {
+  const isNewPerson = () => {
+    return !persons.some( person => person.name === newName )
+  }
+
+  const addNewPerson = () => {
+    const newPerson = { name: newName, number: newNumber }
+    numberService
+      .create(newPerson)
+      .then(response => {
+        setPersons(persons.concat(response))
+        notifySuccess(`${response.name} succesfully added to the phonebook.`)
+      })
+      .catch(error => {
+        const message = error.response.data.error
+        notifyError(message)
+      })
+  }
+
+  const updatePerson = () => {
+    const id = persons.find( person => person.name === newName ).id
+    const updatedPerson = { name: newName, number: newNumber }
+    numberService
+      .update(id, updatedPerson)
+      .then(response => {
+        setPersons(persons.filter( person => person.name !== response.name ).concat(response))
+        notifySuccess(`New number successfully updated for ${response.name}.`)
+      })
+      .catch(error => {
+        const message = error.response.data.error
+        notifyError(message)
+        // setPersons(persons.filter( person => person.name !== newName ))
+        // notifyError(`Failed to update number for ${newName}. It has already been removed.`)
+      })
+  }
+
+  const addNewEntry = (event) => {
     event.preventDefault()
-    if (!persons.some( person => person.name === newName )) {
-      const newPerson = { name: newName, number: newNumber }
-      numberService
-        .create(newPerson)
-        .then(response => {
-          setPersons(persons.concat(response))
-          notifySuccess(`${response.name} succesfully added to the phonebook.`)
-        })
+    if (isNewPerson()) {
+      addNewPerson()
     } else {
       if (window.confirm(`${newName} is already in the phonebook. Replace the old number?`)) {
-        const id = persons.find( person => person.name === newName ).id
-        const newPerson = { name: newName, number: newNumber }
-        numberService
-          .update(id, newPerson)
-          .then(response => {
-            setPersons(persons.filter( person => person.name !== newName ).concat(response))
-            notifySuccess(`New number successfully updated for ${response.name}.`)
-          })
-          .catch(error => {
-            setPersons(persons.filter( person => person.name !== newName ))
-            notifyError(`Failed to update number for ${newName}. It has already been removed.`)
-          })
+        updatePerson()
       }
     }
     setNewName('')
@@ -135,11 +111,11 @@ const App = () => {
   }
 
   const form = {
-    functions: [addName, handleNameChange, handleNumberChange],
+    functions: [addNewEntry, handleNameChange, handleNumberChange],
     variables: [newName, newNumber]
   }
 
-  const numbersToShow = (filter === '') ? persons : persons.filter( person => person.name.toLowerCase().includes(filter) || person.number.toLowerCase().includes(filter))
+  const numbersToShow = (filter === '') ? persons : persons.filter( person => person.name.toLowerCase().includes(filter.toLocaleLowerCase()) || person.number.toLowerCase().includes(filter.toLowerCase()))
 
   return (
     <div>

@@ -19,6 +19,21 @@
       "name": "Mary Poppendieck",
       "number": "39-23-6423122",
       "id": 4
+    },
+    {
+      "name": "Sinä",
+      "number": "234-234",
+      "id": 6
+    },
+    {
+      "name": "Hänkin",
+      "number": "345-345",
+      "id": 7
+    },
+    {
+      "name": "Joku muu kuin minä",
+      "number": "123-123",
+      "id": 8
     }
   ]
 }
