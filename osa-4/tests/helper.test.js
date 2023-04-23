@@ -84,11 +84,11 @@ describe('total likes', () => {
 
 describe('favourite blog', () => {
 
-	test('of empty list is null', () => {
+	test('of empty list is {}', () => {
 		const blogs = []
 
 		const result = helper.favouriteBlog(blogs)
-		expect(result).toBe(null)
+		expect(result).toEqual({})
 	})
 
 	test('of a long list works', () => {
@@ -104,6 +104,65 @@ describe('favourite blog', () => {
 
 		const result = helper.favouriteBlog(newBlogs)
 		expect(result.likes).toBe(12)
+	})
+
+})
+
+describe('most blogs', () => {
+
+	test('of an empty list is {}', () => {
+		const blogs = []
+
+		const result = helper.mostBlogs(blogs)
+		expect(result).toEqual({})
+	})
+
+	test('of a long list works', () => {
+		const expected = {
+			author: "Robert C. Martin",
+  		blogs: 3
+		}
+
+		const result = helper.mostBlogs(blogs)
+		expect(result).toEqual(expected)
+	})
+
+	test('works when multiple authors with most blogs', () => {
+		const newBlogs = blogs.concat(blogs[2])
+		expect(newBlogs.length).toBe(blogs.length + 1)
+
+		const result = helper.mostBlogs(newBlogs)
+		expect(["Edsger W. Dijkstra", "Robert C. Martin"]).toContain(result.author)
+	})
+
+})
+
+describe('most likes', () => {
+
+	test('of an empty list is {}', () => {
+		const blogs = []
+
+		const result = helper.mostLikes(blogs)
+		expect(result).toEqual({})
+	})
+
+	test('of a long list works', () => {
+		const expected = {
+			author: "Edsger W. Dijkstra",
+  		likes: 17
+		}
+
+		const result = helper.mostLikes(blogs)
+		expect(result).toEqual(expected)
+	})
+
+	test('works when multiple authors with most blogs', () => {
+		const newBlogs = blogs.concat(blogs[5])
+		expect(newBlogs.length).toBe(blogs.length + 1)
+		newBlogs[6].likes = 5
+
+		const result = helper.mostLikes(newBlogs)
+		expect(["Edsger W. Dijkstra", "Robert C. Martin"]).toContain(result.author)
 	})
 
 })
