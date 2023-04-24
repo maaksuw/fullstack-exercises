@@ -33,9 +33,9 @@ test('blogs are returned as json', async () => {
 })
 
 test('there are two blogs', async () => {
-	const response = await api.get('/api/blogs')
+	const blogs = (await api.get('/api/blogs')).body
 	
-	expect(response.body).toHaveLength(initialBlogs.length)
+	expect(blogs).toHaveLength(initialBlogs.length)
 })
 
 test('blogs id field is "id" and not "_id"', async () => {
@@ -107,6 +107,31 @@ test('blog must contain url', async () => {
     .post('/api/blogs')
     .send(blogWithoutUrl)
     .expect(400)
+})
+
+test('blog can be deleted', async () => {
+  const blog = {
+    title: 'Nuuhkis ja Kalakaverit',
+    author: 'Nuuhkis Nuuhkulainen',
+    url: 'lohipallero.fi'
+  }
+
+  const result = await api
+    .post('/api/blogs')
+    .send(blog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const id = result.body.id
+
+  await api
+    .delete(`/api/blogs/${id}`)
+    .expect(204)
+
+  const blogs = (await api.get('/api/blogs')).body
+  const titles = blogs.map(blog => blog.title)
+
+  expect(titles).not.toContain(blog.title)
 })
 
 afterAll(async () => {
