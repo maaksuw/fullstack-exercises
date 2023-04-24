@@ -45,6 +45,30 @@ test('blogs id field is "id" and not "_id"', async () => {
 	})
 })
 
+test('a valid blog can be added', async () => {
+  const newBlog = {
+    title: 'Nuuhkis ja Kalakaverit',
+    author: 'Nuuhkis Nuuhkulainen',
+    url: 'lohipallero.fi',
+    likes: 777
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const blogs = (await api.get('/api/blogs')).body
+
+  const titles = blogs.map(b => b.title)
+
+  expect(blogs).toHaveLength(initialBlogs.length + 1)
+  expect(titles).toContain(
+    'Nuuhkis ja Kalakaverit'
+  )
+})
+
 afterAll(async () => {
   await mongoose.connection.close()
 })
