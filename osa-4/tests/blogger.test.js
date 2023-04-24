@@ -85,6 +85,30 @@ test('if likes is not given it defaults to zero', async () => {
 	expect(result.body.likes).toBe(0)
 })
 
+test('blog must contain title', async () => {
+  const blogWithoutTitle = {
+    author: 'Nuuhkis Nuuhkulainen',
+    url: 'lohipallero.fi'
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(blogWithoutTitle)
+    .expect(400)
+})
+
+test('blog must contain url', async () => {
+  const blogWithoutUrl = {
+    title: 'Nuuhkis ja Kalakaverit',
+    author: 'Nuuhkis Nuuhkulainen'
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(blogWithoutUrl)
+    .expect(400)
+})
+
 afterAll(async () => {
   await mongoose.connection.close()
 })
