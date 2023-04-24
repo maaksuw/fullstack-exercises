@@ -33,10 +33,17 @@ test('blogs are returned as json', async () => {
 })
 
 test('there are two blogs', async () => {
-    const response = await api.get('/api/blogs')
-  
-    expect(response.body).toHaveLength(initialBlogs.length)
-  })
+	const response = await api.get('/api/blogs')
+	
+	expect(response.body).toHaveLength(initialBlogs.length)
+})
+
+test('blogs id field is "id" and not "_id"', async () => {
+  const blogs = (await api.get('/api/blogs')).body
+	blogs.forEach((blog) => {
+		expect(blog.id).toBeDefined()
+	})
+})
 
 afterAll(async () => {
   await mongoose.connection.close()
