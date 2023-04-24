@@ -69,6 +69,22 @@ test('a valid blog can be added', async () => {
   )
 })
 
+test('if likes is not given it defaults to zero', async () => {
+  const blogWithoutLikes = {
+    title: 'Nuuhkis ja Kalakaverit',
+    author: 'Nuuhkis Nuuhkulainen',
+    url: 'lohipallero.fi'
+  }
+
+  const result = await api
+    .post('/api/blogs')
+    .send(blogWithoutLikes)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+	
+	expect(result.body.likes).toBe(0)
+})
+
 afterAll(async () => {
   await mongoose.connection.close()
 })
