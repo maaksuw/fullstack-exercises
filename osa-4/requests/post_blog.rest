@@ -3,7 +3,7 @@ Content-type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlN1cGVybnV1aGtpcyIsImlkIjoiNjQ0YTdiZDlkMTA4MjM1NjEwMmRhNjYxIiwiaWF0IjoxNjgyNjA1NDUxLCJleHAiOjE2ODI2MDkwNTF9.Zh-GsPKdQ42ctVp4-dDO5bTori1_o12w6BPPmuJacVI
 
 {
-  "title": "Kalaisat vedet",
+  "title": "Kalaisat vedet 3",
   "author": "Nuuhkis",
   "url": "lohipallero.fi"
 }
