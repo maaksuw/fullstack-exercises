@@ -9,13 +9,14 @@ blogsRouter.get('/', async (request, response) => {
 })
 
 blogsRouter.post('/', async (request, response) => {
-	const body = request.body
 
 	const decodedToken = jwt.verify(request.token, process.env.SECRET)
   if (!decodedToken.id) {
     return response.status(401).json({ error: 'invalid token' })
   }
-  const user = await User.findById(decodedToken.id)
+
+  const user = request.user
+	const body = request.body
 
 	if (!body.title || !body.url) {
 		return response.status(400).send({ error: 'Blog is missing title or url.' })
@@ -37,6 +38,7 @@ blogsRouter.post('/', async (request, response) => {
 })
 
 blogsRouter.delete('/:id', async (request, response) => {
+	
 	if (!request.token) {
 		return response.status(401).send({ error: 'missing token' })
 	}

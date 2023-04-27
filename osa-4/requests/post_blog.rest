@@ -1,9 +1,9 @@
 POST http://localhost:3003/api/blogs HTTP/1.1
 Content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlN1cGVybnV1aGtpcyIsImlkIjoiNjQ0YTdiZDlkMTA4MjM1NjEwMmRhNjYxIiwiaWF0IjoxNjgyNjA1NDUxLCJleHAiOjE2ODI2MDkwNTF9.Zh-GsPKdQ42ctVp4-dDO5bTori1_o12w6BPPmuJacVI
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ik1pc3NlIiwiaWQiOiI2NDQ5NjQwNGIyMzgwNjA5YmNlNTQ1ZGYiLCJpYXQiOjE2ODI2MTAyOTksImV4cCI6MTY4MjYxMzg5OX0.Nv1yjEytJ2g3kDVw_55ZlUxRSrOuTI-MhZ_WjC2zlds
 
 {
-  "title": "Poistettavablogi",
-  "author": "Nuuhkis",
-  "url": "lohipallero.fi"
+  "title": "Poistettavablogi 2",
+  "author": "Misse",
+  "url": "kymysysmerkki.fi"
 }
