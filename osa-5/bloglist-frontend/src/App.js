@@ -3,9 +3,12 @@ import { useState, useEffect } from 'react'
 import BlogList from './components/BlogList'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
+import Notification from './components/Notification'
 
 import blogService from './services/blogs'
 import loginService from './services/login'
+
+import './index.css'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -17,6 +20,9 @@ const App = () => {
   const [newTitle, setNewTitle] = useState('')
   const [newAuthor, setNewAuthor] = useState('')
   const [newUrl, setNewUrl] = useState('')
+
+  const [successMessage, setSuccessMessage] = useState('yatttaa!')
+  const [errorMessage, setErrorMessage] = useState('')
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -47,7 +53,7 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (exception) {
-      console.log(exception)
+      notifyError('Wrong username or password.')
     }
   }
 
@@ -76,12 +82,33 @@ const App = () => {
       url: newUrl
     }
 
-    const addedBlog = await blogService.create(newBlog)
-    setBlogs(blogs.concat(addedBlog))
+    try {
+      const addedBlog = await blogService.create(newBlog)
 
-    setNewTitle('')
-    setNewAuthor('')
-    setNewUrl('')
+      setBlogs(blogs.concat(addedBlog))
+      setNewTitle('')
+      setNewAuthor('')
+      setNewUrl('')
+
+      notifySuccess('Blog added successfully.')
+
+    } catch (exception) {
+      notifyError('Unable to add blog.')
+    }
+  }
+
+  const notifySuccess = (message) => {
+    setSuccessMessage(message)
+    setTimeout(() => {
+      setSuccessMessage('')
+    }, 5000)
+  }
+
+  const notifyError = (message) => {
+    setErrorMessage(message)
+    setTimeout(() => {
+      setErrorMessage('')
+    }, 5000)
   }
 
   const loginForm = {
@@ -97,6 +124,7 @@ const App = () => {
   if (user === null) {
     return (
       <div>
+        <Notification message={errorMessage} type='error'/>
         <h2>Login</h2>
         <LoginForm form={loginForm}/>
       </div>
@@ -110,6 +138,8 @@ const App = () => {
         Logged in as {user.name}
         <button onClick={handleLogout}>Logout</button>
       </p>
+
+      <Notification message={successMessage} type='success'/>
 
       <h2>Create a new blog</h2>
       <BlogForm form={blogForm}/>
