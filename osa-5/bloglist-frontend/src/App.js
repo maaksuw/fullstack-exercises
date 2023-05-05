@@ -15,10 +15,9 @@ const App = () => {
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
 
-  const [successMessage, setSuccessMessage] = useState('')
-  const [errorMessage, setErrorMessage] = useState('')
-
   const blogFormRef = useRef()
+  const loginNRef = useRef()
+  const blogNRef = useRef()
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -44,7 +43,7 @@ const App = () => {
       blogService.setToken(user.token)
       setUser(user)
     } catch (exception) {
-      notifyError('Wrong username or password.')
+      loginNRef.current.notifyError('Wrong username or password.')
     }
   }
 
@@ -58,30 +57,16 @@ const App = () => {
       blogFormRef.current.toggleVisibility()
       const addedBlog = await blogService.create(blogObject)
       setBlogs(blogs.concat(addedBlog))
-      notifySuccess('Blog added successfully.')
+      blogNRef.current.notifySuccess('Blog added successfully.')
     } catch (exception) {
-      notifyError('Unable to add blog.')
+      blogNRef.current.notifyError('Unable to add blog.')
     }
-  }
-
-  const notifySuccess = (message) => {
-    setSuccessMessage(message)
-    setTimeout(() => {
-      setSuccessMessage('')
-    }, 5000)
-  }
-
-  const notifyError = (message) => {
-    setErrorMessage(message)
-    setTimeout(() => {
-      setErrorMessage('')
-    }, 5000)
   }
 
   if (user === null) {
     return (
       <div>
-        <Notification message={errorMessage} type='error'/>
+        <Notification ref={loginNRef}/>
         <h2>Login</h2>
         <LoginForm login={handleLogin}/>
       </div>
@@ -96,7 +81,7 @@ const App = () => {
         <button onClick={handleLogout}>Logout</button>
       </p>
 
-      <Notification message={successMessage} type='success'/>
+      <Notification ref={blogNRef}/>
 
       <h2>Create a new blog</h2>
       <Togglable buttonLabel="New blog" ref={blogFormRef}>
