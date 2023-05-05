@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 import BlogList from './components/BlogList'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
+import Togglable from './components/Togglable'
 
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -17,12 +18,10 @@ const App = () => {
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
 
-  const [newTitle, setNewTitle] = useState('')
-  const [newAuthor, setNewAuthor] = useState('')
-  const [newUrl, setNewUrl] = useState('')
-
-  const [successMessage, setSuccessMessage] = useState('yatttaa!')
+  const [successMessage, setSuccessMessage] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
+
+  const blogFormRef = useRef()
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -62,36 +61,12 @@ const App = () => {
     setUser(null)
   }
 
-  const handleTitleChange = (event) => {
-    setNewTitle(event.target.value)
-  }
-
-  const handleAuthorChange = (event) => {
-    setNewAuthor(event.target.value)
-  }
-
-  const handleUrlChange = (event) => {
-    setNewUrl(event.target.value)
-  }
-
-  const addBlog = async (event) => {
-    event.preventDefault()
-    const newBlog = {
-      title: newTitle,
-      author: newAuthor,
-      url: newUrl
-    }
-
+  const addBlog = async (blogObject) => {
     try {
-      const addedBlog = await blogService.create(newBlog)
-
+      blogFormRef.current.toggleVisibility()
+      const addedBlog = await blogService.create(blogObject)
       setBlogs(blogs.concat(addedBlog))
-      setNewTitle('')
-      setNewAuthor('')
-      setNewUrl('')
-
       notifySuccess('Blog added successfully.')
-
     } catch (exception) {
       notifyError('Unable to add blog.')
     }
@@ -116,11 +91,6 @@ const App = () => {
     functions: [handleLogin, setUsername, setPassword]
   }
 
-  const blogForm = {
-    variables: [newTitle, newAuthor, newUrl],
-    functions: [addBlog, handleTitleChange, handleAuthorChange, handleUrlChange]
-  }
-
   if (user === null) {
     return (
       <div>
@@ -142,7 +112,9 @@ const App = () => {
       <Notification message={successMessage} type='success'/>
 
       <h2>Create a new blog</h2>
-      <BlogForm form={blogForm}/>
+      <Togglable buttonLabel="New blog" ref={blogFormRef}>
+        <BlogForm createBlog={addBlog}/>
+      </Togglable>
 
       <h2>Blogs</h2>
       <BlogList blogs={blogs}/>
