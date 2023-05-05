@@ -60,7 +60,23 @@ const App = () => {
       setBlogs(blogs.concat(addedBlog))
       blogNRef.current.notifySuccess('Blog added successfully.')
     } catch (exception) {
-      blogNRef.current.notifyError('Unable to add blog.')
+      blogNRef.current.notifyError('Something went wrong. Unable to add blog.')
+    }
+  }
+
+  const likeBlog = async (blogObject) => {
+    try {
+      const updatedBlog = await blogService.update(blogObject)
+      console.log(updatedBlog)
+      const updatedBlogs = blogs.map(blog => {
+        if (blog.id === updatedBlog.id) {
+          return updatedBlog
+        }
+        return blog
+      })
+      setBlogs(updatedBlogs)
+    } catch (exception) {
+      blogNRef.current.notifyError('Something went wrong. Unable to like blog.')
     }
   }
 
@@ -90,7 +106,7 @@ const App = () => {
       </Togglable>
 
       <h2>Blogs</h2>
-      <BlogList blogs={blogs}/>
+      <BlogList blogs={blogs} likeBlog={likeBlog}/>
 
     </div>
   )

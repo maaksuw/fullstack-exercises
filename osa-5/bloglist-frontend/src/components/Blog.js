@@ -1,8 +1,15 @@
 import { useState } from 'react'
 import Button from './Button'
 
-const Blog = ({blog, deleteBlog}) => {
+const Blog = ({blog, likeBlog}) => {
   const [show, setShow] = useState(false)
+
+  const like = () => {
+    blog.likes += 1
+    blog.user = blog.user.id
+    likeBlog(blog)
+  }
+
   if (show) {
     return (
       <div className='blog'>
@@ -15,7 +22,7 @@ const Blog = ({blog, deleteBlog}) => {
         </p>
         <p>
           Likes: {blog.likes}
-          <Button text="Like"/>
+          <Button text="Like" action={() => like()}/>
         </p>
         <p>Added by user: {blog.user.username}</p>
       </div>
