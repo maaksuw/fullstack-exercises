@@ -86,6 +86,16 @@ const App = () => {
     }
   }
 
+  const deleteBlog = async (id) => {
+    try {
+      await blogService.remove(id)
+      const updatedBlogs = blogs.filter(blog => blog.id !== id)
+      updateBlogs(updatedBlogs)
+    } catch (exception) {
+      blogNRef.current.notifyError('Something went wrong. Unable to delete blog.')
+    }
+  }
+
   if (user === null) {
     return (
       <div>
@@ -112,7 +122,7 @@ const App = () => {
       </Togglable>
 
       <h2>Blogs</h2>
-      <BlogList blogs={blogs} likeBlog={likeBlog}/>
+      <BlogList blogs={blogs} user={user} likeBlog={likeBlog} deleteBlog={deleteBlog}/>
 
     </div>
   )

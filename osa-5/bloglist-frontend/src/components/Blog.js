@@ -1,8 +1,10 @@
 import { useState } from 'react'
 import Button from './Button'
 
-const Blog = ({blog, likeBlog}) => {
-  const [show, setShow] = useState(false)
+const Blog = ({blog, user, likeBlog, deleteBlog}) => {
+  const [fullView, setFullView] = useState(false)
+
+  const style = { display: (user.name === blog.user.name) ? '' : 'none' }
 
   const like = () => {
     blog.likes += 1
@@ -10,12 +12,18 @@ const Blog = ({blog, likeBlog}) => {
     likeBlog(blog)
   }
 
-  if (show) {
+  const remove = () => {
+    if (window.confirm('Do you really want to delete this blog?')) {
+      deleteBlog(blog.id)
+    }
+  }
+
+  if (fullView) {
     return (
       <div className='blog'>
         <p>
           {blog.title} by {blog.author}
-          <Button text="Hide" action={() => setShow(!show)}/>
+          <Button text="Hide" action={() => setFullView(!fullView)}/>
         </p>
         <p>
           URL: <a href={blog.url}>{blog.url}</a>
@@ -25,6 +33,7 @@ const Blog = ({blog, likeBlog}) => {
           <Button text="Like" action={() => like()}/>
         </p>
         <p>Added by user: {blog.user.username}</p>
+        <Button text="Delete" action={() => remove()} style={style}/>
       </div>
     )
   }
@@ -33,7 +42,7 @@ const Blog = ({blog, likeBlog}) => {
   <div className='blog'>
     <p>
       {blog.title} by {blog.author}
-      <Button text="View" action={() => setShow(!show)}/>
+      <Button text="View" action={() => setFullView(!fullView)}/>
     </p>
   </div>
   )

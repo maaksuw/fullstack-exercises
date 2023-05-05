@@ -49,7 +49,6 @@ blogsRouter.delete('/:id', async (request, response) => {
 })
 
 blogsRouter.put('/:id', async (request, response) => {
-	console.log('HERE WE ARE')
   const blog = request.body
   const id = request.params.id
   const updatedBlog = await Blog.findByIdAndUpdate(id, blog, { new: true }).populate('user', { username: 1, name: 1 })
