@@ -20,9 +20,16 @@ const App = () => {
   const loginNRef = useRef()
   const blogNRef = useRef()
 
+  const updateBlogs = (newBlogs) => {
+    newBlogs.sort((a, b) => {
+      return b.likes - a.likes;
+    })
+    setBlogs(newBlogs)
+  }
+
   useEffect(() => {
     blogService.getAll().then(blogs =>
-      setBlogs( blogs )
+      updateBlogs(blogs)
     )  
   }, [])
 
@@ -57,7 +64,7 @@ const App = () => {
     try {
       blogFormRef.current.toggleVisibility()
       const addedBlog = await blogService.create(blogObject)
-      setBlogs(blogs.concat(addedBlog))
+      updateBlogs(blogs.concat(addedBlog))
       blogNRef.current.notifySuccess('Blog added successfully.')
     } catch (exception) {
       blogNRef.current.notifyError('Something went wrong. Unable to add blog.')
@@ -67,14 +74,13 @@ const App = () => {
   const likeBlog = async (blogObject) => {
     try {
       const updatedBlog = await blogService.update(blogObject)
-      console.log(updatedBlog)
       const updatedBlogs = blogs.map(blog => {
         if (blog.id === updatedBlog.id) {
           return updatedBlog
         }
         return blog
       })
-      setBlogs(updatedBlogs)
+      updateBlogs(updatedBlogs)
     } catch (exception) {
       blogNRef.current.notifyError('Something went wrong. Unable to like blog.')
     }
