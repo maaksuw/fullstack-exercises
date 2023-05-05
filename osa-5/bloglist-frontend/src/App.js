@@ -13,9 +13,6 @@ import './index.css'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-
-  const [username, setUsername] = useState('') 
-  const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
 
   const [successMessage, setSuccessMessage] = useState('')
@@ -38,19 +35,14 @@ const App = () => {
     }
   }, [])
 
-  const handleLogin = async (event) => {
-    event.preventDefault()
+  const handleLogin = async (credentials) => {
     try {
-      const user = await loginService.login({
-        username, password,
-      })
+      const user = await loginService.login(credentials)
       window.localStorage.setItem(
         'loggedBlogappUser', JSON.stringify(user)
       )
       blogService.setToken(user.token)
       setUser(user)
-      setUsername('')
-      setPassword('')
     } catch (exception) {
       notifyError('Wrong username or password.')
     }
@@ -86,17 +78,12 @@ const App = () => {
     }, 5000)
   }
 
-  const loginForm = {
-    variables: [username, password],
-    functions: [handleLogin, setUsername, setPassword]
-  }
-
   if (user === null) {
     return (
       <div>
         <Notification message={errorMessage} type='error'/>
         <h2>Login</h2>
-        <LoginForm form={loginForm}/>
+        <LoginForm login={handleLogin}/>
       </div>
     )
   }

@@ -1,6 +1,20 @@
-const LoginForm = ({form}) => {
-	const [handleLogin, setUsername, setPassword] = form.functions
-	const [username, password] = form.variables
+import { useState } from 'react'
+
+const LoginForm = ({login}) => {
+
+	const [username, setUsername] = useState('')
+	const [password, setPassword] = useState('')
+
+	const handleLogin = async (event) => {
+		event.preventDefault()
+		login({
+			username,
+			password,
+		})
+		setUsername('')
+		setPassword('')
+	  }
+
 	return (
 		<form onSubmit={handleLogin}>
 			<div>
