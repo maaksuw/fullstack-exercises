@@ -5,6 +5,7 @@ import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
+import Button from './components/Button'
 
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -78,7 +79,7 @@ const App = () => {
 
       <p>
         Logged in as {user.name}
-        <button onClick={handleLogout}>Logout</button>
+        <Button action={handleLogout} text="Logout" />
       </p>
 
       <Notification ref={blogNRef}/>

@@ -3,7 +3,6 @@ import Button from './Button'
 
 const Blog = ({blog, deleteBlog}) => {
   const [show, setShow] = useState(false)
-
   if (show) {
     return (
       <div className='blog'>
