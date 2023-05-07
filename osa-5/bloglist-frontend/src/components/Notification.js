@@ -1,12 +1,12 @@
 import { useState, useImperativeHandle, forwardRef } from 'react'
 
 const Notification = forwardRef((props, ref) => {
-	const [message, setMessage] = useState('')
-	const [type, setType] = useState('none')
+  const [message, setMessage] = useState('')
+  const [type, setType] = useState('none')
 
-	const notifySuccess = (message) => {
+  const notifySuccess = (message) => {
     setMessage(message)
-		setType('success')
+    setType('success')
     setTimeout(() => {
       setMessage('')
     }, 5000)
@@ -14,28 +14,30 @@ const Notification = forwardRef((props, ref) => {
 
   const notifyError = (message) => {
     setMessage(message)
-		setType('error')
+    setType('error')
     setTimeout(() => {
       setMessage('')
     }, 5000)
   }
 
-	useImperativeHandle(ref, () => {
+  useImperativeHandle(ref, () => {
     return {
       notifySuccess,
-			notifyError
+      notifyError
     }
   })
 
-	if (message === '') {
-		return null
-	}
+  if (message === '') {
+    return null
+  }
 
-	return (
-		<div className={type}>
-			{message}
-		</div>
-	)
+  return (
+    <div className={type}>
+      {message}
+    </div>
+  )
 })
+
+Notification.displayName = 'Notification'
 
 export default Notification

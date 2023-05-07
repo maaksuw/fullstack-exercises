@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import Button from './Button'
 
-const Blog = ({blog, user, likeBlog, deleteBlog}) => {
+const Blog = ({ blog, user, likeBlog, deleteBlog }) => {
   const [fullView, setFullView] = useState(false)
 
   const style = { display: (user.name === blog.user.name) ? '' : 'none' }
@@ -23,28 +23,28 @@ const Blog = ({blog, user, likeBlog, deleteBlog}) => {
       <div className='blog'>
         <p>
           {blog.title} by {blog.author}
-          <Button text="Hide" action={() => setFullView(!fullView)}/>
+          <Button text="Hide" action={() => setFullView(!fullView)} />
         </p>
         <p>
           URL: <a href={blog.url}>{blog.url}</a>
         </p>
         <p>
           Likes: {blog.likes}
-          <Button text="Like" action={() => like()}/>
+          <Button text="Like" action={() => like()} />
         </p>
         <p>Added by user: {blog.user.username}</p>
-        <Button text="Delete" action={() => remove()} style={style}/>
+        <Button text="Delete" action={() => remove()} style={style} />
       </div>
     )
   }
 
   return (
-  <div className='blog'>
-    <p>
-      {blog.title} by {blog.author}
-      <Button text="View" action={() => setFullView(!fullView)}/>
-    </p>
-  </div>
+    <div className='blog'>
+      <p>
+        {blog.title} by {blog.author}
+        <Button text="View" action={() => setFullView(!fullView)} />
+      </p>
+    </div>
   )
 }
 

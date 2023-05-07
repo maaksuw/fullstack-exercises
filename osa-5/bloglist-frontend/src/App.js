@@ -22,7 +22,7 @@ const App = () => {
 
   const updateBlogs = (newBlogs) => {
     newBlogs.sort((a, b) => {
-      return b.likes - a.likes;
+      return b.likes - a.likes
     })
     setBlogs(newBlogs)
   }
@@ -30,7 +30,7 @@ const App = () => {
   useEffect(() => {
     blogService.getAll().then(blogs =>
       updateBlogs(blogs)
-    )  
+    )
   }, [])
 
   useEffect(() => {
@@ -99,9 +99,9 @@ const App = () => {
   if (user === null) {
     return (
       <div>
-        <Notification ref={loginNRef}/>
+        <Notification ref={loginNRef} />
         <h2>Login</h2>
-        <LoginForm login={handleLogin}/>
+        <LoginForm login={handleLogin} />
       </div>
     )
   }
@@ -114,15 +114,15 @@ const App = () => {
         <Button action={handleLogout} text="Logout" />
       </p>
 
-      <Notification ref={blogNRef}/>
+      <Notification ref={blogNRef} />
 
       <h2>Create a new blog</h2>
       <Togglable buttonLabel="New blog" ref={blogFormRef}>
-        <BlogForm createBlog={addBlog}/>
+        <BlogForm createBlog={addBlog} />
       </Togglable>
 
       <h2>Blogs</h2>
-      <BlogList blogs={blogs} user={user} likeBlog={likeBlog} deleteBlog={deleteBlog}/>
+      <BlogList blogs={blogs} user={user} likeBlog={likeBlog} deleteBlog={deleteBlog} />
 
     </div>
   )
