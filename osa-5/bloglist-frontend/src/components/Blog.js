@@ -30,10 +30,10 @@ const Blog = ({ blog, user, likeBlog, deleteBlog }) => {
         </p>
         <p>
           Likes: {blog.likes}
-          <Button text="Like" action={() => like()} />
+          <Button text="Like" action={() => like()} id="like-button"/>
         </p>
         <p>Added by user: {blog.user.username}</p>
-        <Button text="Delete" action={() => remove()} style={style} />
+        <Button text="Delete" action={() => remove()} style={style} id="delete-button"/>
       </div>
     )
   }

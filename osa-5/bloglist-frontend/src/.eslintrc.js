@@ -2,7 +2,8 @@ module.exports = {
   'env': {
     'browser': true,
     'es6': true,
-    'jest/globals': true
+    'jest/globals': true,
+    'cypress/globals': true
   },
   'extends': [
     'eslint:recommended',
@@ -15,11 +16,12 @@ module.exports = {
     'ecmaVersion': 2018,
     'sourceType': 'module'
   },
-  /* I got the following error with the original configuration: ESLint couldn't determine the plugin "jest" uniquely. This part is commented to fix this error.
-  'plugins': [
-    'react', 'jest'
-  ],
+  /* I got the following error with the original configuration: ESLint couldn't determine the plugin "jest" uniquely. jest was removed to fix this error.
+  - , 'jest'
   */
+  'plugins': [
+    'react', 'cypress'
+  ],
   'rules': {
     'indent': [
       'error',

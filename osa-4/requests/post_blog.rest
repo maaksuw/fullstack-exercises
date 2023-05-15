@@ -1,9 +1,9 @@
 POST http://localhost:3003/api/blogs HTTP/1.1
 Content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ik1pc3NlIiwiaWQiOiI2NDQ5NjQwNGIyMzgwNjA5YmNlNTQ1ZGYiLCJpYXQiOjE2ODI2MTAyOTksImV4cCI6MTY4MjYxMzg5OX0.Nv1yjEytJ2g3kDVw_55ZlUxRSrOuTI-MhZ_WjC2zlds
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1pc3NlIiwiaWQiOiI2NDYyN2QxYTA3YTM1ZWFhY2MwYjRhMTIiLCJpYXQiOjE2ODQxNzYyMjQsImV4cCI6MTY4NDE3OTgyNH0.-zMjtlxbA4FEktQSoJRiHCEazFiWULa1RmPNMPCGZ30
 
 {
-  "title": "Poistettavablogi 2",
-  "author": "Misse",
+  "title": "Uusi blogi",
+  "author": "Bloggaaja",
   "url": "kymysysmerkki.fi"
 }
